@@ -1,21 +1,22 @@
-﻿CREATE DATABASE Deso9_LuyenHaiDang
---Quản lý thi lại, học lại sinh viên--
+﻿--Quản lý thi lại, học lại sinh viên--
+CREATE DATABASE Deso9_LuyenHaiDang
 USE Deso9_LuyenHaiDang
---Tạo cơ sở dữ liệu--
+
+--Câu 1: Tạo cơ sở dữ liệu--
 --Tạo bảng lớp học--
 CREATE TABLE Class
 (
 IDCLASS CHAR(10),
 NAMECLASS NVARCHAR(50) UNIQUE,
-NUMBERSTUDENT INT,
 CONSTRAINT PK_CLASS PRIMARY KEY(IDCLASS)
 )
+
 --Tạo bảng sinh viên--
 CREATE TABLE Student
 (
 IDSTUDENT CHAR(10),
 NAMESTUDENT NVARCHAR(30),
-BIRTHDAY DATE CHECK(YEAR(BIRTHDAY)<=1995 AND YEAR(BIRTHDAY)>=1990),
+BIRTHDAY DATE,
 SEX NVARCHAR(3) CHECK(SEX IN (N'Nam',N'Nữ')),
 ANDRESS NVARCHAR(30),
 NUMBERPHONE NVARCHAR(10),
@@ -29,21 +30,23 @@ CREATE TABLE Teacher
 (
 IDTEACHER CHAR(10),
 NAMETEACHER NVARCHAR(30),
-BIRTHDAY DATE CHECK(YEAR(BIRTHDAY)<=1995 AND YEAR(BIRTHDAY)>=1990),
+BIRTHDAY DATE,
 SEX NVARCHAR(3) CHECK(SEX IN (N'Nam',N'Nữ')),
 ANDRESS NVARCHAR(30),
 NUMBERPHONE NVARCHAR(10),
 EMAIL NVARCHAR(30),
 CONSTRAINT PK_TEACHER PRIMARY KEY(IDTEACHER)
 )
+
 --Tạo bảng môn học--
 CREATE TABLE Subject
 (
 IDSUBJECT CHAR(10),
 NAMESUBJECT NVARCHAR(30),
-NUMBERCREDITS INT CHECK(NUMBERCREDITS > 0 AND NUMBERCREDITS < 16)
+NUMBERCREDITS INT,
 CONSTRAINT PK_SUBJECT PRIMARY KEY(IDSUBJECT)
 )
+
 --Tạo bảng lớp học lại--
 CREATE TABLE ReTestClass
 (
@@ -52,10 +55,8 @@ NAMECLASS NVARCHAR(30),
 IDSUBJECT CHAR(10) FOREIGN KEY REFERENCES SUBJECT(IDSUBJECT) ON DELETE CASCADE ON UPDATE CASCADE,
 IDTEACHER CHAR(10) FOREIGN KEY REFERENCES TEACHER(IDTEACHER) ON DELETE CASCADE ON UPDATE CASCADE,
 NUMBERSTUDENT INT,
-SEMESTER INT CHECK(SEMESTER >0 AND SEMESTER<3),
+SEMESTER INT,
 YEARSCHOOL NVARCHAR(30),
-STATUSRETESTCLASS NVARCHAR(30) CHECK(STATUSRETESTCLASS IN (N'ĐÓNG',N'MỞ')),
-CONSTRAINT PU_RETESTCLASS UNIQUE(IDCLASS,YEARSCHOOL,SEMESTER),
 CONSTRAINT PK_RETESTCLASS PRIMARY KEY(IDCLASS),
 )
 --Tạo bảng đăng ký học lại--
@@ -63,7 +64,6 @@ CREATE TABLE RegisterReTest
 (
 IDSTUDENT CHAR(10) FOREIGN KEY REFERENCES STUDENT(IDSTUDENT) ON DELETE CASCADE ON UPDATE CASCADE,
 IDCLASS CHAR(10) FOREIGN KEY REFERENCES RETESTCLASS(IDCLASS) ON DELETE CASCADE ON UPDATE CASCADE,
-STATUS NVARCHAR(30),
 CONSTRAINT PK_RegisterReTest PRIMARY KEY(IDSTUDENT,IDCLASS)
 )
 --Tạo bảng nộp tiền--
@@ -88,6 +88,7 @@ CONSTRAINT PK_SCORES PRIMARY KEY(IDSTUDENT,IDCLASS)
 )
 
 --Thêm dữ liệu vào các bảng--
+
 --Thêm dữ liệu bảng lớp--
 INSERT INTO Class(IDCLASS,NAMECLASS)VALUES('125201',N'SEK18.1')
 INSERT INTO Class(IDCLASS,NAMECLASS)VALUES('125202',N'SEK18.2')
@@ -99,6 +100,7 @@ INSERT INTO Class(IDCLASS,NAMECLASS)VALUES('125207',N'SEK18.7')
 INSERT INTO Class(IDCLASS,NAMECLASS)VALUES('125208',N'SEK18.8')
 INSERT INTO Class(IDCLASS,NAMECLASS)VALUES('125209',N'SEK18.9')
 INSERT INTO Class(IDCLASS,NAMECLASS)VALUES('125210',N'SEK18.10')
+
 --Thêm dữ liệu bảng sinh viên--
 INSERT INTO Student(IDSTUDENT,NAMESTUDENT,BIRTHDAY,SEX,ANDRESS,NUMBERPHONE,EMAIL,IDCLASS)VALUES('12520063',N'Luyện Hải Đăng','2002-06-10',N'Nam',N'Hưng Yên',N'0922002360',N'luyenhaidangit@gmail.com',N'125201')
 INSERT INTO Student(IDSTUDENT,NAMESTUDENT,BIRTHDAY,SEX,ANDRESS,NUMBERPHONE,EMAIL,IDCLASS)VALUES('12520064',N'Đào Xuân Đức','2002-06-11',N'Nam',N'Hưng Yên',N'0922002361',N'luyenhaidangit1@gmail.com',N'125201')
@@ -110,6 +112,8 @@ INSERT INTO Student(IDSTUDENT,NAMESTUDENT,BIRTHDAY,SEX,ANDRESS,NUMBERPHONE,EMAIL
 INSERT INTO Student(IDSTUDENT,NAMESTUDENT,BIRTHDAY,SEX,ANDRESS,NUMBERPHONE,EMAIL,IDCLASS)VALUES('12520070',N'Luyện Minh Quân','2002-06-18',N'Nam',N'Hưng Yên',N'0922002367',N'luyenhaidangit5@gmail.com',N'125202')
 INSERT INTO Student(IDSTUDENT,NAMESTUDENT,BIRTHDAY,SEX,ANDRESS,NUMBERPHONE,EMAIL,IDCLASS)VALUES('12520071',N'Phạm Xuân Tuyển','2002-06-15',N'Nam',N'Hưng Yên',N'0922002365',N'luyenhaidangit5@gmail.com',N'125203')
 INSERT INTO Student(IDSTUDENT,NAMESTUDENT,BIRTHDAY,SEX,ANDRESS,NUMBERPHONE,EMAIL,IDCLASS)VALUES('12520072',N'Nguyễn Thanh Tùng','2002-06-15',N'Nam',N'Hưng Yên',N'0922002365',N'luyenhaidangit5@gmail.com',N'125203')
+INSERT INTO Student(IDSTUDENT,NAMESTUDENT,BIRTHDAY,SEX,ANDRESS,NUMBERPHONE,EMAIL,IDCLASS)VALUES('12520074',N'Luyện Hải Đăng','2002-06-10',N'Nam',N'Hưng Yên',N'0922002360',N'luyenhaidangit@gmail.com',N'125205')
+
 --Thêm dữ liệu bảng giáo viên--
 INSERT INTO Teacher(IDTEACHER,NAMETEACHER,BIRTHDAY,SEX,ANDRESS,NUMBERPHONE,EMAIL)VALUES('1210',N'Trịnh Thị Nhị','1980-06-10',N'Nữ',N'Hưng Yên',N'0922002360',N'luyenhaidangit@gmail.com')
 INSERT INTO Teacher(IDTEACHER,NAMETEACHER,BIRTHDAY,SEX,ANDRESS,NUMBERPHONE,EMAIL)VALUES('1211',N'Nguyễn Hữu Đông','1980-06-11',N'Nam',N'Hưng Yên',N'0922002360',N'luyenhaidangit@gmail.com')
@@ -121,6 +125,7 @@ INSERT INTO Teacher(IDTEACHER,NAMETEACHER,BIRTHDAY,SEX,ANDRESS,NUMBERPHONE,EMAIL
 INSERT INTO Teacher(IDTEACHER,NAMETEACHER,BIRTHDAY,SEX,ANDRESS,NUMBERPHONE,EMAIL)VALUES('1217',N'Đào Anh Hiển','1980-06-10',N'Nam',N'Hưng Yên',N'0922002360',N'luyenhaidangit@gmail.com')
 INSERT INTO Teacher(IDTEACHER,NAMETEACHER,BIRTHDAY,SEX,ANDRESS,NUMBERPHONE,EMAIL)VALUES('1218',N'Nguyễn Thị Huyền','1980-06-10',N'Nữ',N'Hưng Yên',N'0922002360',N'luyenhaidangit@gmail.com')
 INSERT INTO Teacher(IDTEACHER,NAMETEACHER,BIRTHDAY,SEX,ANDRESS,NUMBERPHONE,EMAIL)VALUES('1219',N'Đỗ Quỳnh Trang','1980-06-10',N'Nữ',N'Hưng Yên',N'0922002360',N'luyenhaidangit@gmail.com')
+
 --Thêm dữ liệu bảng môn học--
 INSERT INTO Subject(IDSUBJECT,NAMESUBJECT,NUMBERCREDITS)VALUES('1100',N'Hệ quản trị cơ sở dữ liệu',3)
 INSERT INTO Subject(IDSUBJECT,NAMESUBJECT,NUMBERCREDITS)VALUES('1101',N'Lập trình hướng đối tượng',4)
@@ -132,6 +137,7 @@ INSERT INTO Subject(IDSUBJECT,NAMESUBJECT,NUMBERCREDITS)VALUES('1106',N'Cấu tr
 INSERT INTO Subject(IDSUBJECT,NAMESUBJECT,NUMBERCREDITS)VALUES('1107',N'Lập trình căn bản',3)
 INSERT INTO Subject(IDSUBJECT,NAMESUBJECT,NUMBERCREDITS)VALUES('1108',N'Triết học',3)
 INSERT INTO Subject(IDSUBJECT,NAMESUBJECT,NUMBERCREDITS)VALUES('1109',N'Kinh tế chính trị',2)
+
 --Thêm dữ liệu bảng lớp học cải thiện--
 INSERT INTO ReTestClass(IDCLASS,NAMECLASS,IDSUBJECT,IDTEACHER,YEARSCHOOL,SEMESTER)VALUES('101100',N'CT101100','1100','1210','2021',2)
 INSERT INTO ReTestClass(IDCLASS,NAMECLASS,IDSUBJECT,IDTEACHER,YEARSCHOOL,SEMESTER)VALUES('101101',N'CT101101','1100','1210','2021',2)
@@ -143,8 +149,18 @@ INSERT INTO ReTestClass(IDCLASS,NAMECLASS,IDSUBJECT,IDTEACHER,YEARSCHOOL,SEMESTE
 INSERT INTO ReTestClass(IDCLASS,NAMECLASS,IDSUBJECT,IDTEACHER,YEARSCHOOL,SEMESTER)VALUES('101107',N'CT101100','1103','1210','2021',2)
 INSERT INTO ReTestClass(IDCLASS,NAMECLASS,IDSUBJECT,IDTEACHER,YEARSCHOOL,SEMESTER)VALUES('101108',N'CT101108','1104','1210','2021',2)
 INSERT INTO ReTestClass(IDCLASS,NAMECLASS,IDSUBJECT,IDTEACHER,YEARSCHOOL,SEMESTER)VALUES('101109',N'CT101109','1105','1210','2021',2)
+
 --Thêm dữ liệu bảng đăng ký học lại--
+UPDATE RegisterReTest SET STATUS = N'Đã duyệt' WHERE IDSTUDENT = '12520067' AND IDCLASS='101103'
+
 INSERT INTO RegisterReTest(IDSTUDENT,IDCLASS)VALUES('12520063',N'101100')
+INSERT INTO RegisterReTest(IDSTUDENT,IDCLASS)VALUES('12520067',N'101100')
+INSERT INTO RegisterReTest(IDSTUDENT,IDCLASS)VALUES('12520068',N'101100')
+INSERT INTO RegisterReTest(IDSTUDENT,IDCLASS)VALUES('12520069',N'101100')
+INSERT INTO RegisterReTest(IDSTUDENT,IDCLASS)VALUES('12520070',N'101100')
+INSERT INTO RegisterReTest(IDSTUDENT,IDCLASS)VALUES('12520071',N'101100')
+INSERT INTO RegisterReTest(IDSTUDENT,IDCLASS)VALUES('12520072',N'101100')
+INSERT INTO RegisterReTest(IDSTUDENT,IDCLASS)VALUES('12520073',N'101100')
 INSERT INTO RegisterReTest(IDSTUDENT,IDCLASS)VALUES('12520064',N'101100')
 INSERT INTO RegisterReTest(IDSTUDENT,IDCLASS)VALUES('12520063',N'101101')
 INSERT INTO RegisterReTest(IDSTUDENT,IDCLASS)VALUES('12520065',N'101100')
@@ -154,6 +170,10 @@ INSERT INTO RegisterReTest(IDSTUDENT,IDCLASS)VALUES('12520065',N'101101')
 INSERT INTO RegisterReTest(IDSTUDENT,IDCLASS)VALUES('12520063',N'101103')
 INSERT INTO RegisterReTest(IDSTUDENT,IDCLASS)VALUES('12520064',N'101103')
 INSERT INTO RegisterReTest(IDSTUDENT,IDCLASS)VALUES('12520066',N'101103')
+INSERT INTO RegisterReTest(IDSTUDENT,IDCLASS)VALUES('12520067',N'101103')
+INSERT INTO RegisterReTest(IDSTUDENT,IDCLASS)VALUES('12520067',N'101104')
+INSERT INTO RegisterReTest(IDSTUDENT,IDCLASS)VALUES('12520073',N'101104')
+
 --Nhập dữ liệu bảng Payment--
 INSERT INTO Payment(IDSTUDENT,IDCLASS,NUMBERPAYMENT,DAYPAYMENT)VALUES('12520063',N'101100',1000000,'2022-06-18')
 INSERT INTO Payment(IDSTUDENT,IDCLASS,NUMBERPAYMENT,DAYPAYMENT)VALUES('12520063',N'101101',600000,'2022-06-18')
@@ -165,17 +185,22 @@ INSERT INTO Payment(IDSTUDENT,IDCLASS,NUMBERPAYMENT,DAYPAYMENT)VALUES('12520065'
 INSERT INTO Payment(IDSTUDENT,IDCLASS,NUMBERPAYMENT,DAYPAYMENT)VALUES('12520063',N'101103',1000000,'2022-06-18')
 INSERT INTO Payment(IDSTUDENT,IDCLASS,NUMBERPAYMENT,DAYPAYMENT)VALUES('12520064',N'101103',800000,'2022-06-18')
 INSERT INTO Payment(IDSTUDENT,IDCLASS,NUMBERPAYMENT,DAYPAYMENT)VALUES('12520066',N'101103',1000000,'2022-06-18')
+
 --Nhập dữ liệu bảng Scores--
 INSERT INTO Scores(MARK1,MARK2,IDSTUDENT,IDCLASS)VALUES(9,9,'12520063',N'101100')
 INSERT INTO Scores(MARK1,MARK2,IDSTUDENT,IDCLASS)VALUES(8,9,'12520063',N'101101')
 INSERT INTO Scores(MARK1,MARK2,IDSTUDENT,IDCLASS)VALUES(9,10,'12520064',N'101100')
 INSERT INTO Scores(MARK1,MARK2,IDSTUDENT,IDCLASS)VALUES(8,9,'12520065',N'101100')
-INSERT INTO Scores(MARK1,MARK2,IDSTUDENT,IDCLASS)VALUES(9,9,'12520066',N'101100')
+INSERT INTO Scores(MARK1,MARK2,IDSTUDENT,IDCLASS)VALUES(9,9,'12520066',N'101103')
 INSERT INTO Scores(MARK1,MARK2,IDSTUDENT,IDCLASS)VALUES(7,9,'12520064',N'101101')
 INSERT INTO Scores(MARK1,MARK2,IDSTUDENT,IDCLASS)VALUES(7,9,'12520065',N'101101')
 INSERT INTO Scores(MARK1,MARK2,IDSTUDENT,IDCLASS)VALUES(8,9,'12520063',N'101103')
+INSERT INTO Scores(MARK1,MARK2,IDSTUDENT,IDCLASS)VALUES(8,9,'12520066',N'101103')
 INSERT INTO Scores(MARK1,MARK2,IDSTUDENT,IDCLASS)VALUES(6,6,'12520064',N'101103')
 INSERT INTO Scores(MARK1,MARK2,IDSTUDENT,IDCLASS)VALUES(9,2,'12520066',N'101103')
+INSERT INTO Scores(MARK1,MARK2,IDSTUDENT,IDCLASS)VALUES(9,2,'12520067',N'101103')
+INSERT INTO Scores(MARK1,MARK2,IDSTUDENT,IDCLASS)VALUES(9,2,'12520067',N'101104')
+
 
 SELECT * FROM Class
 SELECT * FROM Student
@@ -185,3 +210,597 @@ SELECT * FROM ReTestClass
 SELECT * FROM RegisterReTest
 SELECT * FROM Payment
 SELECT * FROM Scores
+
+
+DELETE FROM Teacher WHERE IDTEACHER = '1214'
+--Câu 2: Quản lý người dùng--
+--Đăng nhập tài khoản sa để tạo các login,user,role--
+
+--Tạo login--
+EXEC sp_addlogin cb1,'dang'
+EXEC sp_addlogin cb2,'dang'
+EXEC sp_addlogin gv1,'dang'
+EXEC sp_addlogin gv2,'dang'
+EXEC sp_addlogin gv3,'dang'
+EXEC sp_addlogin sv1,'dang'
+EXEC sp_addlogin sv2,'dang'
+
+--Tạo user--
+EXEC sp_adduser cb1,CanBo1
+EXEC sp_adduser cb2,CanBo2
+EXEC sp_adduser gv1,GiaoVien1
+EXEC sp_adduser gv2,GiaoVien2
+EXEC sp_adduser gv3,GiaoVien3
+EXEC sp_adduser sv1,SinhVien1
+EXEC sp_adduser sv2,SinhVien2
+
+--Tạo role--
+EXEC sp_addrole CanBo
+EXEC sp_addrole GiaoVien
+EXEC sp_addrole SinhVien
+
+--Thêm người dùng vào role--
+EXEC sp_addrolemember CanBo,CanBo1
+EXEC sp_addrolemember CanBo,CanBo2
+EXEC sp_addrolemember GiaoVien,GiaoVien1
+EXEC sp_addrolemember GiaoVien,GiaoVien2
+EXEC sp_addrolemember GiaoVien,GiaoVien3
+EXEC sp_addrolemember SinhVien,SinhVien1
+EXEC sp_addrolemember SinhVien,GiaoVien2
+
+--Cấp quyền cho người dùng--
+--Cập toàn quyền các bảng Student, Class,Subject cho CanBo1--
+GRANT SELECT, INSERT,UPDATE,DELETE,REFERENCES,ALTER ON Student to CanBo1
+GRANT SELECT, INSERT,UPDATE,DELETE,REFERENCES,ALTER ON Class to CanBo1
+GRANT SELECT, INSERT,UPDATE,DELETE,REFERENCES,ALTER ON Subject to CanBo1
+
+--Cấp toàn quyền các bảng teacher, retestclass,registerretest,payment,scores cho CanBo2--
+GRANT SELECT, INSERT,UPDATE,DELETE,REFERENCES,ALTER ON Teacher to CanBo2
+GRANT SELECT, INSERT,UPDATE,DELETE,REFERENCES,ALTER ON ReTestClass to CanBo2
+GRANT SELECT, INSERT,UPDATE,DELETE,REFERENCES,ALTER ON RegisterReTest to CanBo2
+GRANT SELECT, INSERT,UPDATE,DELETE,REFERENCES,ALTER ON Payment to CanBo2
+GRANT SELECT, INSERT,UPDATE,DELETE,REFERENCES,ALTER ON Scores to CanBo2
+
+--Cấp quyền select và insert bảng scores cho GiaoVien1--
+
+GRANT SELECT, INSERT ON Scores to GiaoVien1
+--Cấp quyền select và insert bảng Student cho GiaoVien1--
+
+GRANT SELECT, INSERT ON Student to GiaoVien2
+--Cấp quyền select và insert bảng Subject cho GiaoVien1--
+
+GRANT SELECT, INSERT ON Subject to GiaoVien3
+--Cấp quyền select các bảng retestclass,registerretest và scores cho nhóm người dùng SinhVien--
+
+GRANT SELECT ON RETESTCLASS TO SinhVien
+GRANT SELECT ON REGISTERRETEST TO SinhVien
+GRANT SELECT ON SCORES TO SinhVien
+
+--Đăng nhập sa thu hồi toàn quyền bảng Subject với CanBo1--
+
+REVOKE SELECT, INSERT,UPDATE,DELETE,REFERENCES,ALTER ON Student TO CanBo1
+--Thu hồi toàn quyền bảng Teacher với CanBo2--
+
+REVOKE SELECT, INSERT,UPDATE,DELETE,REFERENCES,ALTER ON Teacher TO CanBo2
+--Thu hồi quyền insert bảng Subject với GiaoVien3--
+
+REVOKE INSERT ON Subject TO GiaoVien3
+
+--Câu 3: Tạo Chỉ mục--
+
+--Tạo 2 chỉ mục đơn--
+
+--Tạo chỉ mục đơn nonclustered trên cột NameStudent trên bảng Student--
+CREATE NONCLUSTERED INDEX noncluster_name ON Student(NameStudent)
+--Tìm kiếm sinh viên họ Nguyễn với chỉ mục noncluster_name--
+SELECT * FROM Student 
+WITH(INDEX = noncluster_name)
+WHERE NAMESTUDENT LIKE N'Nguyễn %'
+
+
+--Tạo chỉ mục đơn trên cột Andress bảng Student với tùy chọn hệ số điền đầy là 60--
+CREATE NONCLUSTERED INDEX noncluster_andress ON Student(Andress) WITH FILLFACTOR=60
+--Tìm kiếm sinh viên có địa chỉ là Hưng Yên với chỉ mục vừa tạo--
+SELECT * FROM Student WITH(INDEX = noncluster_andress) WHERE ANDRESS = N'Hưng Yên'
+
+
+--Tạo 2 chỉ mục phức hợp--
+--Tạo chỉ mục phức hợp nonclustered trên cột NameStudent và Andress bảng Student--
+CREATE NONCLUSTERED INDEX noncluster_nameandress ON Student(NameStudent,Andress)
+--Tìm kiếm thông tin sinh viên có họ Nguyễn và địa chỉ quê quán tại Hưng Yên--
+SELECT * FROM Student WITH(INDEX = noncluster_nameandress) WHERE NAMESTUDENT LIKE N'Nguyễn %' AND ANDRESS = N'Hưng Yên'
+
+
+--Tạo chỉ mục phức nonclustered trên các cột NameTeacher, Birthday, Sex và Andress bảng Teacher--
+CREATE NONCLUSTERED INDEX noncluster_teacher ON Teacher(NameTeacher,Birthday,Sex,Andress)
+--Tìm kiếm thông tin giáo viên tên họ Nguyễn, tuổi 42, giới tính Nam và quê quán khác Hà Nội--
+SELECT * FROM Teacher WITH(INDEX = noncluster_teacher) WHERE NAMETEACHER LIKE N'Nguyễn %' AND (YEAR(GETDATE())-YEAR(BIRTHDAY)=42) AND SEX = N'Nam' AND ANDRESS <> N'Hà Nội'
+
+--Tạo 1 chỉ mục toàn văn--
+EXEC sp_fulltext_database 'enable'
+exec sp_fulltext_database 'disable'
+CREATE  FULLTEXT CATALOG HT_cat1
+WITH ACCENT_SENSITIVITY = OFF
+AS DEFAULT
+CREATE FULLTEXT INDEX ON Student(NameStudent)
+KEY INDEX PK_Student ON HT_cat1
+
+SELECT * FROM Class
+SELECT * FROM Student
+SELECT * FROM Teacher
+SELECT * FROM [Subject]
+SELECT * FROM ReTestClass
+SELECT * FROM RegisterReTest
+SELECT * FROM Payment
+SELECT * FROM Scores
+
+--Câu 4: Tạo view--
+--Tạo view hiển thị thông tin gồm mã sinh viên, họ tên, giới tính, ngày sinh , quê quán, số điện thoại, email của các sinh viên có mã lớp 125201--
+CREATE VIEW W_PRACTICE1
+AS
+SELECT S.IDSTUDENT,S.NAMESTUDENT,S.SEX,S.BIRTHDAY,S.ANDRESS,S.NUMBERPHONE,S.EMAIL FROM STUDENT S WHERE S.IDCLASS = '125201'
+GO
+
+SELECT * FROM W_PRACTICE1
+--Tạo view hiển thị thông tin gồm mã môn học, tên môn học, số tín chỉ các môn học có số tín lớn hơn 2--
+CREATE VIEW W_PRACTICE2
+AS
+SELECT SB.IDSUBJECT,SB.NAMESUBJECT,SB.NUMBERCREDITS FROM SUBJECT SB WHERE SB.NUMBERCREDITS > 2
+GO
+
+SELECT * FROM W_PRACTICE2
+
+--Tạo view hiển thị thông tin gồm mã sinh viên, họ tên, ngày sinh các sinh viên học lớp học có tên SEK18.1--
+CREATE VIEW W_PRACTICE3
+AS
+SELECT S.IDSTUDENT,S.NAMESTUDENT,S.BIRTHDAY FROM STUDENT S INNER JOIN CLASS C ON S.IDCLASS = C.IDCLASS WHERE C.NAMECLASS = 'SEK18.1'
+GO
+
+SELECT * FROM W_PRACTICE3
+
+--Tạo view hiển thị thông tin giáo viên đă phân giảng dạy lớp học cải thiện môn Hệ quản trị cơ sở dữ liệu--
+CREATE VIEW W_PRACTICE4
+AS
+SELECT T.IDTEACHER, T.NamETEACHER FROM Teacher T INNER JOIN ReTestClass RT ON T.IDTEACHER = RT.IDTEACHER
+INNER JOIN SUBJECT S ON S.IDSUBJECT = RT.IDSUBJECT WHERE S.NAMESUBJECT = N'Hệ quản trị cơ sở dữ liệu' GROUP BY T.IDTEACHER,T.NAMETEACHER
+GO
+
+SELECT * FROM W_PRACTICE4
+
+--Tạo view hiển thị thông tin môn học gồm mã môn học, tên môn học, số lượt đăng ký học cải thiện được đăng ký học cải thiện nhiều nhất--
+CREATE VIEW W_PRACTICE5
+AS
+SELECT TOP(1) S.IDSUBJECT, S.NamESUBJECT,[Số lượt đăng ký] = COUNT(RS.IDSTUDENT)
+FROM Subject s INNER JOIN ReTestClass RT ON S.IDSUBJECT = RT.IDSUBJECT
+INNER JOIN RegisterReTest RS ON RT.IDCLASS = RS.IDCLASS
+GROUP BY S.IDSUBJECT,S.NAMESUBJECT ORDER BY COUNT(RS.IDSTUDENT)
+GO
+
+SELECT * FROM W_PRACTICE5
+
+--Câu 5: Viết câu truy vấn nâng cao--
+--Truy vấn 1: Hiển thi số lượng sinh viên theo từng lớp--
+SELECT C.IDCLASS,C.NameClass,COUNT(S.IDSTUDENT) AS [Số lượng sinh viên] FROM Class
+C LEFT JOIN Student S ON S.IDCLASS = C.IDCLASS
+GROUP BY C.IDCLASS,C.NAMECLASS
+
+
+
+--Truy vấn 2: Hiển thị thông tin lớp học chưa có sinh viên nào--
+SELECT C.IDCLASS,C.NameClass FROM Class C LEFT JOIN Student S ON C.IDCLASS = S.IDCLASS WHERE S.IDCLASS IS NULL
+
+
+
+--Truy vấn 3: Hiển thị 3 môn học có số tín chỉ cao nhất từ cao đến thấp--
+SELECT TOP(3) SU.IDSUBJECT,SU.NAMESUBJECT,SU.NUMBERCREDITS FROM SUBJECT SU ORDER BY SU.NUMBERCREDITS DESC
+
+
+--Truy vấn 4: Hiển thị thông tin lớp đông sinh viên nhất gồm mã lớp, tên lớp, số lượng sinh viên--
+SELECT TOP(1) WITH TIES C.IDCLASS,C.NAMECLASS,SLSV = COUNT(S.IDSTUDENT)
+FROM CLASS C LEFT JOIN STUDENT S ON S.IDCLASS = C.IDCLASS GROUP BY C.IDCLASS,C.NAMECLASS
+ORDER BY COUNT(S.IDSTUDENT) DESC
+
+
+--Truy vấn 5: Hiển thị thông tin sinh viên trượt học cải thiện của các môn có số tín chỉ >=2 và có quê ở Hưng Yên--
+
+SELECT S.IDSTUDENT,S.NAMESTUDENT,S.IDCLASS FROM Student S INNER JOIN RegisterReTest RE ON S.IDSTUDENT = RE.IDSTUDENT
+INNER JOIN ReTestClass RC ON RC.IDCLASS = RE.IDCLASS
+INNER JOIN Subject SU ON SU.IDSUBJECT = RC.IDSUBJECT
+INNER JOIN Scores SC ON SC.IDSTUDENT = RE.IDSTUDENT AND SC.IDCLASS = RE.IDCLASS
+WHERE SC.MARK1 < 5 OR SC.MARK2<5 AND SU.NUMBERCREDITS >=2 AND S.ANDRESS = N'Hưng Yên' GROUP BY S.IDSTUDENT,S.NAMESTUDENT,S.IDCLASS
+
+
+--Truy vấn 6: Thực hiện xếp loại đánh giá điểm cho các sinh viên học cải thiện vào kỳ năm học 2021--
+
+SELECT S.IDSTUDENT,S.NAMESTUDENT,SU.NameSubject,DanhGia = 
+CASE
+	WHEN SC.MARK1>=5 AND SC.MARK2 >=5 THEN N'Qua môn'
+	ELSE N'Trượt môn'
+END
+FROM Student S INNER JOIN RegisterReTest RE ON S.IDSTUDENT = RE.IDSTUDENT
+INNER JOIN ReTestClass RC ON RC.IDCLASS = RE.IDCLASS
+INNER JOIN Subject SU ON SU.IDSUBJECT = RC.IDSUBJECT
+INNER JOIN Scores SC ON SC.IDSTUDENT = RE.IDSTUDENT AND SC.IDCLASS = RE.IDCLASS
+WHERE RC.SEMESTER = 2 AND RC.YEARSCHOOL = 2021
+
+
+
+--Truy vấn 7: Hiển thị điểm trung bình các lần thi lại của sinh viên lớp 125201--
+SELECT S.IDSTUDENT,S.NAMESTUDENT,SU.NameSubject,(SC.MARK1+SC.MARK2)/2 AS [Điểm Trung Bình]
+FROM Student S INNER JOIN RegisterReTest RE ON S.IDSTUDENT = RE.IDSTUDENT
+INNER JOIN ReTestClass RC ON RC.IDCLASS = RE.IDCLASS
+INNER JOIN Subject SU ON SU.IDSUBJECT = RC.IDSUBJECT
+INNER JOIN Scores SC ON SC.IDSTUDENT = RE.IDSTUDENT AND SC.IDCLASS = RE.IDCLASS
+INNER JOIN Class C ON C.IDCLASS = S.IDCLASS WHERE C.IDCLASS = '125201'
+
+
+--Truy vấn 8: Hiển thị thông tin giáo viên gồm mã giáo viên, tên giáo viên từng dạy học lớp cải thiện môn Hệ Quản trị cơ sở dữ liệu vào kỳ 2 năm 2021--
+SELECT T.IDTEACHER, T.NameTeacher FROM Teacher T INNER JOIN ReTestClass RC ON RC.IDTEACHER = T.IDTEACHER
+INNER JOIN Subject SU ON SU.IDSUBJECT = RC.IDSUBJECT
+WHERE RC.SEMESTER = 2 AND RC.YEARSCHOOL = 2021 AND SU.NAMESUBJECT = N'Hệ quản trị cơ sở dữ liệu' GROUP BY T.IDTEACHER,T.NAMETEACHER
+
+
+
+
+--Truy vấn 9: Liệt kê các sinh viên từng đạt điểm trung bình thi lại cao nhất môn Hệ quản trị cơ sở dữ liệu--
+
+SELECT S.IDSTUDENT,S.NAMESTUDENT FROM Student S INNER JOIN RegisterReTest RE ON S.IDSTUDENT = RE.IDSTUDENT
+INNER JOIN ReTestClass RC ON RC.IDCLASS = RE.IDCLASS
+INNER JOIN Subject SU ON SU.IDSUBJECT = RC.IDSUBJECT
+INNER JOIN Scores SC ON SC.IDCLASS = RE.IDCLASS AND SC.IDSTUDENT = RE.IDSTUDENT
+WHERE SU.NAMESUBJECT = N'Hệ quản trị cơ sở dữ liệu' AND (SC.MARK1+SC.MARK2)/2 =
+(SELECT (MAX((SC.MARK1+SC.MARK2)/2)) FROM Subject SU INNER JOIN ReTestClass RC ON SU.IDSUBJECT = RC.IDSUBJECT
+INNER JOIN RegisterReTest RE ON RE.IDCLASS = RC.IDCLASS
+INNER JOIN Scores SC ON SC.IDSTUDENT = RE.IDSTUDENT AND SC.IDCLASS = RE.IDCLASS
+WHERE SU.NAMESUBJECT = N'Hệ quản trị cơ sở dữ liệu'
+)
+
+
+
+--Truy vấn 10: Liệu kê danh sách sinh viên gồm mã sinh viên,tên sinh viên, mã lớp chưa nộp tiền học phí--
+
+SELECT S.IDSTUDENT, S.NAMESTUDENT, S.IDCLASS FROM Student S LEFT JOIN RegisterReTest R on S.IDSTUDENT = R.IDSTUDENT
+LEFT JOIN Payment P on P.IDSTUDENT = R.IDSTUDENT AND P.IDCLASS = R.IDCLASS
+WHERE S.IDSTUDENT IN (SELECT IDSTUDENT FROM RegisterReTest) AND S.IDSTUDENT NOT IN (SELECT IDSTUDENT FROM Payment)
+GROUP BY S.IDSTUDENT, S.NAMESTUDENT, S.IDCLASS
+
+
+--Truy vấn 11: Liệt kê môn học có nhiều sinh viên đăng ký học lại nhất--
+SELECT TOP(1) WITH TIES S.IDSUBJECT, S.NAMESUBJECT FROM [Subject] S INNER JOIN ReTestClass R ON S.IDSUBJECT = R.IDSUBJECT
+INNER JOIN RegisterReTest RE ON RE.IDCLASS = R.IDCLASS
+GROUP BY S.IDSUBJECT, S.NAMESUBJECT
+ORDER BY COUNT(RE.IDSTUDENT) DESC
+
+
+
+--Truy vấn 12: Hiển thị thông tin giáo viên quê quán Hưng Yên đã dạy học lại sinh viên đạt điểm trung bình >=8--
+
+SELECT T.IDTEACHER, T.NAMETEACHER, T.SEX FROM Teacher T INNER JOIN ReTestClass R ON T.IDTEACHER = R.IDTEACHER
+INNER JOIN RegisterReTest RE ON RE.IDCLASS = R.IDCLASS
+INNER JOIN Scores S ON S.IDCLASS = RE.IDCLASS AND S.IDSTUDENT = RE.IDSTUDENT
+WHERE (S.MARK1 + S.MARK2) / 2 >= 8
+GROUP BY T.IDTEACHER, T.NAMETEACHER, T.SEX
+
+
+
+--Truy vấn 13: Hiển thị số lượng sinh viên phải học lại môn Hệ quản trị cơ sở dữ liệu của từng lớp--
+SELECT R.IDCLASS, R.NAMECLASS, COUNT(ST.IDSTUDENT) AS [SỐ LƯỢNG SINH VIÊN] FROM [Subject] S 
+INNER JOIN ReTestClass R ON S.IDSUBJECT = R.IDSUBJECT
+INNER JOIN RegisterReTest RE ON RE.IDCLASS = R.IDCLASS
+INNER JOIN Student ST ON ST.IDSTUDENT = RE.IDSTUDENT
+WHERE S.NAMESUBJECT = N'Hệ quản trị cơ sở dữ liệu'
+GROUP BY R.IDCLASS, R.NAMECLASS
+
+
+
+--Truy vấn 14: Tính tổng số tiền học lại môn Hệ quản trị cơ sở dữ liệu của lớp CT101100--
+SELECT S.IDSUBJECT, S.NAMESUBJECT, R.NAMECLASS, SUM(P.NUMBERPAYMENT) AS [TỔNG TIỀN HỌC LẠI] FROM [Subject] S 
+INNER JOIN ReTestClass R ON S.IDSUBJECT = R.IDSUBJECT
+INNER JOIN RegisterReTest RE ON RE.IDCLASS = R.IDCLASS
+INNER JOIN Payment P on P.IDSTUDENT = RE.IDSTUDENT AND P.IDCLASS = RE.IDCLASS
+WHERE R.NAMECLASS = 'CT101100' AND S.NAMESUBJECT = N'Hệ quản trị cơ sở dữ liệu'
+GROUP BY S.IDSUBJECT, S.NAMESUBJECT, R.NAMECLASS
+
+
+
+
+--Truy vấn 15: Liệt kê thông tin các sinh viên đạt điểm trung bình học cải thiện lớn hơn 6 vào kỳ 2 năm 2021 được dạy bởi giáo viên Trịnh Thị Nhị--
+SELECT ST.IDSTUDENT, ST.NAMESTUDENT FROM Teacher T
+INNER JOIN ReTestClass R ON T.IDTEACHER = R.IDTEACHER
+INNER JOIN RegisterReTest RE ON RE.IDCLASS = R.IDCLASS
+INNER JOIN Student ST ON ST.IDSTUDENT = RE.IDSTUDENT
+INNER JOIN Scores S ON S.IDCLASS = RE.IDCLASS AND S.IDSTUDENT = RE.IDSTUDENT
+WHERE (S.MARK1 + S.MARK2) / 2 > 6 AND T.NAMETEACHER = N'Trịnh Thị Nhị' AND R.SEMESTER = 2 AND YEAR(R.YEARSCHOOL) = 2021
+GROUP BY ST.IDSTUDENT, ST.NAMESTUDENT
+
+
+select * from student
+
+--Câu 6: Thủ tục--
+--Thủ tục 1: Thủ tục nhập thông tin sinh viên vào bảng student kiểm tra điều kiện mã tồn tại--
+CREATE PROC SP_Student(@IDStudent CHAR(10),@NameStudent Nvarchar(30),@Birthday Date,@Sex Nvarchar(3),@Andress Nvarchar(30),@Numberphone Nvarchar(10),@Email Nvarchar(30),@IDClass Nvarchar(10))
+AS
+IF(EXISTS(SELECT S.IDStudent FROM Student S WHERE S.IDSTUDENT = @IDStudent))
+PRINT N'Mã sinh viên đã tồn tại, vui lòng nhập mã khác'
+ELSE
+INSERT INTO Student VALUES(@IDStudent,@NameStudent,@Birthday,@Sex,@Andress,@Numberphone,@Email,@IDClass)
+
+EXEC dbo.SP_Student @IDSTUDENt = '12520080',
+@NameStudent = N'Luyện Hải Đăng',
+@Birthday = '2002-06-10',
+@Sex = N'Nam',
+@Andress = N'Hưng Yên',
+@Numberphone = '0922002360',
+@Email = 'luyenhaidangit@gmail.com',
+@IDClass = '125201'
+
+--Thủ tục 2: Thủ tục thêm thông tin lớp học vào bảng class nếu trùng tên với 1 lớp khác thì thông báo--
+CREATE PROC SP_ADD_Class(@IDClass CHAR(10),@NameClass Nvarchar(30))
+AS
+IF(EXISTS(SELECT C.IDClass FROM Class C WHERE C.IDCLass = @IDCLass))
+PRINT N'Mã lớp đã tồn tại, vui lòng nhập mã khác'
+ELSE
+INSERT INTO Class VALUES(@IDClass,@NameClass)
+
+EXEC dbo.SP_ADD_Class @IDClass = '125211',
+@NameStudent = N'SEK18.11'
+
+
+
+
+select * from student
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+select * from Scores
+
+
+
+
+
+
+
+
+drop trigger NotDelete_Table
+
+--Trigger--
+--Trigger 1: Không cho phép xóa bảng trong cơ sở dữ liệu--
+CREATE TRIGGER NotDelete_Table ON DATABASE
+FOR DROP_TABLE
+AS
+BEGIN
+PRINT N'Không thể xóa bảng'
+ROLLBACK
+END
+--Thực thi--
+DROP TABLE demo
+--Trigger 2: Trigger chỉ cho phép xóa những lớp không có sinh viên nào--
+CREATE TRIGGER Delete_Class_No_Student ON CLASS
+INSTEAD OF delete
+AS
+BEGIN
+IF(SELECT COUNT(*) FROM Student INNER JOIN deleted d ON Student.IDCLASS = d.IDCLASS) > 0
+BEGIN
+RAISERROR (N'Lớp học tồn tại sinh viên, không thể xóa',16,1)
+ROLLBACK
+END
+ELSE
+BEGIN
+DELETE FROM Class WHERE IDCLASS IN(SELECT IDCLASS FROM deleted)
+PRINT N'Xóa thành công'
+END
+END
+drop trigger Delete_Class_No_Student
+--Kích hoạt--
+DELETE FROM Class WHERE IDCLASS = '125201'
+
+--Trigger 3: Viết trigger sao cho chỉ cho phép nhập thông tin môn học có số tín chỉ từ 1 đến 15--
+CREATE TRIGGER INSERT_SUBJECT_NUMBER
+ON SUBJECT FOR INSERT
+AS
+BEGIN
+DECLARE @stc INT
+SELECT @stc = NUMBERCREDITS FROM inserted
+IF(@Stc>=1 AND @stc<=15)
+PRINT N'Hợp lệ, nhập thông tin lớp học thành công'
+ELSE
+RAISERROR (N'Số tín chỉ phải lớn hơn hoặc bằng 1 và nhỏ hơn hoặc bằng 15, thử lại',1,2)
+ROLLBACK
+END
+--Kích hoạt--
+INSERT INTO Subject(IDSUBJECT,NAMESUBJECT,NUMBERCREDITS)VALUES('1110',N'Công nghệ phần mềm',17)
+
+--Trigger 4: Viết trigger khi xóa 1 lớp thì thông tin liên quan cũng bị xóa theo--
+ALTER TRIGGER DELETE_CLASS_DELTE_STUDENT ON STUDENT
+FOR DELETE
+AS
+BEGIN
+IF(@@ROWCOUNT<=0)
+PRINT N'Không có lớp nào trong bảng'
+ELSE
+BEGIN
+PRINT N'Dữ liệu lớp và các sinh viên thuộc lớp đó đã bị xóa'
+DELETE FROM Student WHERE IDCLASS IN (SELECT IDCLASS FROM deleted)
+END
+END
+--Thực thi--
+DELETE FROM Class WHERE IDCLASS = '125205'
+
+
+--Trigger 5: Viết trigger sao cho chỉ cho phép nhập điểm số của sinh viên đăng ký học cải thiện với trạng thái đã duyệt và lớp học Hoạt động--
+ALTER TRIGGER Insert_Scores_When_Reg_True
+ON SCORES
+FOR INSERT AS
+BEGIN
+DECLARE @Status NVARCHAR(30)
+DECLARE @StatusClass NVARCHAR(30)
+SELECT @Status = RE.STATUS FROM inserted SC INNER JOIN RegisterReTest RE ON SC.IDCLASS = RE.IDCLASS AND SC.IDSTUDENT = RE.IDSTUDENT
+SELECT @StatusClass = RC.STATUSRETESTCLASS FROM ReTestClass RC INNER JOIN RegisterReTest RE ON RC.IDCLASS = RE.IDCLASS
+INNER JOIN inserted SC ON SC.IDSTUDENT = RE.IDSTUDENT
+IF(@Status=N'Đã duyệt' AND @StatusClass = N'Hoạt động')
+Print N'Nhập điểm thành công'
+ELSE
+BEGIN
+RAISERROR(N'Đơn đăng ký học cải thiện chưa được duyệt hoặc lớp học chưa hoạt động, thử lại',1,2)
+ROLLBACK
+END
+END
+GO
+--Thực thi--
+INSERT INTO Scores(MARK1,MARK2,IDSTUDENT,IDCLASS)VALUES(7,9,'12520073',N'101104')
+
+SELECT PM.NUMBERPAYMENT FROM Payment PM
+--Trigger 6: Viết trigger không cho phép số tiền nộp nhỏ hơn số tín chỉ * số tiền 1 tín của lớp học--
+CREATE TRIGGER Insert_Money_ReTest ON Payment
+FOR INSERT AS
+DECLARE @Money1 INT
+DECLARE @Money2 INT
+SELECT @Money1 = SU.NUMBERCREDITS * 315000 FROM SUBJECT SU INNER JOIN ReTestClass RC ON
+RC.IDSUBJECT = SU.IDSUBJECT INNER JOIN RegisterReTest RE ON
+RE.IDCLASS = RC.IDCLASS INNER JOIN inserted PM ON
+PM.IDCLASS = RE.IDCLASS AND PM.IDSTUDENT = RE.IDSTUDENT
+SELECT @Money2 = PM.NUMBERPAYMENT FROM inserted PM WHERE IDCLASS IN(SELECT IDCLASS FROM inserted) AND IDSTUDENT IN(SELECT IDSTUDENT FROM inserted)
+
+select * from Payment
+
+
+
+drop trigger Insert_Reg_When_ClassReg_True
+--Trigger 2: Viết trigger sao cho khi có ít nhất 6 đơn đăng ký học lớp cải thiện thì trạng thái lớp học cải thiện chuyển sang là Đã duyệt--
+ALTER TRIGGER Insert_Reg_When_ClassReg_True
+ON RegisterReTest
+FOR INSERT AS
+BEGIN
+DECLARE @NumberRegiste INT
+DECLARE @IDCLass NVARCHAR(30)
+SELECT @IDCLass = IDCLASS FROM inserted
+SELECT @NumberRegiste = COUNT(RE.IDSTUDENT) FROM inserted RE WHERE RE.IDCLASS = @IDCLass GROUP BY RE.IDCLASS,RE.STATUS
+IF(@NumberRegiste>=6)
+BEGIN
+PRINT @IDCLASS
+PRINT @NumberRegiste
+Print N'Thực hiện update trạng thái lớp học'
+UPDATE ReTestClass SET STATUSRETESTCLASS = N'Hoạt động' WHERE ReTestClass.IDCLASS = @IDCLass
+END
+ELSE
+BEGIN
+Print N'Sĩ số lớp học chưa đủ, chưa thực hiện update lớp học'
+END
+END
+GO
+
+
+
+
+
+
+
+
+
+
+--Trigger tự động cập nhật lại thông tin sĩ số của 1 lớp--
+CREATE TRIGGER Auto_UpDate_NumberStudent_Class
+ON LOP
+
+CREATE TRIGGER CAU6
+ ON Lop
+ FOR UPDATE 
+ AS
+ IF UPDATE (MaLop)
+ 
+ BEGIN
+	DECLARE @MaLop varchar(10)
+	DECLARE @MaSV varchar(10)
+	DECLARE contro CURSOR FOR
+	SELECT inserted.MaLop
+	FROM INSERTED INNER JOIN DELETED
+	ON INSERTED.MaLop=DELETED.MaLop
+	OPEN contro
+	FETCH NEXT FROM contro INTO @MaLop,@MaSV
+	WHILE @@FETCH_STATUS=0
+	BEGIN 
+	UPDATE SV.MaLop SET MaLop=@MaLop
+	WHERE Lop.MaLop=@MaLop
+	FETCH NEXT FROM contro INTO @MaSV,@MaLop
+
+	END
+	CLOSE contro
+	DEALLOCATE contro
+ END
+
+
+
+
+
+
+
+
+
+
+
+CREATE VIEW w_cau1
+AS
+SELECT s.HoTen,s.GioiTinh,m.TenMonHoc,d.DiemLan1
+FROM SINHVIEN s INNER JOIN DiemTHi D On s.MaSV = d.MaSV
+INNER JOIN MONHOC m ON d.MaMonHoc = m.MaMonHoc
+select * from w_cau1
+
+--Viết thủ tục cập nhật số lượng sinh viên hiện tại của từng lớp vào cột sinh viên--
+CREATE PROC UPDATE_CLASS_NUMBERSTUDENT
+AS
+BEGIN
+	DECLARE cur_slsv CURSOR SCROLL
+FOR
+SELECT CLASS.IDCLASS, COUNT(S.IDSTUDENT) AS NUMBERSTUDENT
+FROM CLASS LEFT JOIN
+STUDENT S ON CLASS.IDCLASS=S.IDCLASS
+GROUP BY CLASS.IDCLASS
+--Cập nhật--
+UPDATE CLASS SET NUMBERSTUDENT = 0
+--Sử dụng con trỏ--
+--Mở con trỏ--
+OPEN cur_slsv
+DECLARE @IDCLASS char(10)
+DECLARE @NUMBERSTUDENT TINYINT
+--Truy xuất--
+FETCH NEXT FROM cur_slsv
+INTO @IDCLASS, @NUMBERSTUDENT
+--Duyệt--
+While @@FETCH_STATUS=0
+BEGIN
+UPDATE CLASS
+Set NUMBERSTUDENT=@NUMBERSTUDENT
+WHERE IDCLASS=@IDCLASS
+
+FETCH NEXT FROM cur_slsv
+INTO @IDCLASS, @NUMBERSTUDENT
+END
+CLOSE cur_slsv
+DEALLOCATE  cur_slsv
+END
+
+EXEC UPDATE_CLASS_NUMBERSTUDENT
+
+SELECT * FROM CLASS
