@@ -187,6 +187,7 @@ INSERT INTO Payment(IDSTUDENT,IDCLASS,NUMBERPAYMENT,DAYPAYMENT)VALUES('12520064'
 INSERT INTO Payment(IDSTUDENT,IDCLASS,NUMBERPAYMENT,DAYPAYMENT)VALUES('12520066',N'101103',1000000,'2022-06-18')
 
 --Nhập dữ liệu bảng Scores--
+INSERT INTO Scores(MARK1,MARK2,IDSTUDENT,IDCLASS)VALUES(2,2,'12520063',N'101103')
 INSERT INTO Scores(MARK1,MARK2,IDSTUDENT,IDCLASS)VALUES(9,9,'12520063',N'101100')
 INSERT INTO Scores(MARK1,MARK2,IDSTUDENT,IDCLASS)VALUES(8,9,'12520063',N'101101')
 INSERT INTO Scores(MARK1,MARK2,IDSTUDENT,IDCLASS)VALUES(9,10,'12520064',N'101100')
@@ -288,7 +289,7 @@ REVOKE INSERT ON Subject TO GiaoVien3
 
 --Câu 3: Tạo Chỉ mục--
 
---Tạo 2 chỉ mục đơn--
+
 
 --Tạo chỉ mục đơn nonclustered trên cột NameStudent trên bảng Student--
 CREATE NONCLUSTERED INDEX noncluster_name ON Student(NameStudent)
@@ -342,6 +343,8 @@ SELECT S.IDSTUDENT,S.NAMESTUDENT,S.SEX,S.BIRTHDAY,S.ANDRESS,S.NUMBERPHONE,S.EMAI
 GO
 
 SELECT * FROM W_PRACTICE1
+UPDATE W_PRACTICE1 SET NAMESTUDENT = N'Đinh Hoàng Anh' WHERE IDSTUDENT = '12520080'
+DELETE FROM W_PRACTICE1 WHERE IDSTUDENT = '12520067'
 --Tạo view hiển thị thông tin gồm mã môn học, tên môn học, số tín chỉ các môn học có số tín lớn hơn 2--
 CREATE VIEW W_PRACTICE2
 AS
@@ -349,7 +352,7 @@ SELECT SB.IDSUBJECT,SB.NAMESUBJECT,SB.NUMBERCREDITS FROM SUBJECT SB WHERE SB.NUM
 GO
 
 SELECT * FROM W_PRACTICE2
-
+UPDATE W_PRACTICE2 SET NUMBERCREDITS = 5 WHERE IDSUBJECT = 1101
 --Tạo view hiển thị thông tin gồm mã sinh viên, họ tên, ngày sinh các sinh viên học lớp học có tên SEK18.1--
 CREATE VIEW W_PRACTICE3
 AS
@@ -402,13 +405,12 @@ ORDER BY COUNT(S.IDSTUDENT) DESC
 
 
 --Truy vấn 5: Hiển thị thông tin sinh viên trượt học cải thiện của các môn có số tín chỉ >=2 và có quê ở Hưng Yên--
-
 SELECT S.IDSTUDENT,S.NAMESTUDENT,S.IDCLASS FROM Student S INNER JOIN RegisterReTest RE ON S.IDSTUDENT = RE.IDSTUDENT
 INNER JOIN ReTestClass RC ON RC.IDCLASS = RE.IDCLASS
 INNER JOIN Subject SU ON SU.IDSUBJECT = RC.IDSUBJECT
 INNER JOIN Scores SC ON SC.IDSTUDENT = RE.IDSTUDENT AND SC.IDCLASS = RE.IDCLASS
 WHERE SC.MARK1 < 5 OR SC.MARK2<5 AND SU.NUMBERCREDITS >=2 AND S.ANDRESS = N'Hưng Yên' GROUP BY S.IDSTUDENT,S.NAMESTUDENT,S.IDCLASS
-
+select * from Scores
 
 --Truy vấn 6: Thực hiện xếp loại đánh giá điểm cho các sinh viên học cải thiện vào kỳ năm học 2021--
 
@@ -426,7 +428,7 @@ WHERE RC.SEMESTER = 2 AND RC.YEARSCHOOL = 2021
 
 
 --Truy vấn 7: Hiển thị điểm trung bình các lần thi lại của sinh viên lớp 125201--
-SELECT S.IDSTUDENT,S.NAMESTUDENT,SU.NameSubject,(SC.MARK1+SC.MARK2)/2 AS [Điểm Trung Bình]
+SELECT S.IDSTUDENT,S.NAMESTUDENT,SU.NameSubject,RC.IDCLASS,RC.YEARSCHOOL,RC.SEMESTER,(SC.MARK1+SC.MARK2)/2 AS [Điểm Trung Bình]
 FROM Student S INNER JOIN RegisterReTest RE ON S.IDSTUDENT = RE.IDSTUDENT
 INNER JOIN ReTestClass RC ON RC.IDCLASS = RE.IDCLASS
 INNER JOIN Subject SU ON SU.IDSUBJECT = RC.IDSUBJECT
@@ -434,7 +436,7 @@ INNER JOIN Scores SC ON SC.IDSTUDENT = RE.IDSTUDENT AND SC.IDCLASS = RE.IDCLASS
 INNER JOIN Class C ON C.IDCLASS = S.IDCLASS WHERE C.IDCLASS = '125201'
 
 
---Truy vấn 8: Hiển thị thông tin giáo viên gồm mã giáo viên, tên giáo viên từng dạy học lớp cải thiện môn Hệ Quản trị cơ sở dữ liệu vào kỳ 2 năm 2021--
+--Truy vấn 8: Hiển thị thông tin giáo viên gồm mã giáo viên, tên giáo viên dạy học lớp cải thiện môn Hệ Quản trị cơ sở dữ liệu vào kỳ 2 năm 2021--
 SELECT T.IDTEACHER, T.NameTeacher FROM Teacher T INNER JOIN ReTestClass RC ON RC.IDTEACHER = T.IDTEACHER
 INNER JOIN Subject SU ON SU.IDSUBJECT = RC.IDSUBJECT
 WHERE RC.SEMESTER = 2 AND RC.YEARSCHOOL = 2021 AND SU.NAMESUBJECT = N'Hệ quản trị cơ sở dữ liệu' GROUP BY T.IDTEACHER,T.NAMETEACHER
@@ -514,6 +516,11 @@ WHERE (S.MARK1 + S.MARK2) / 2 > 6 AND T.NAMETEACHER = N'Trịnh Thị Nhị' AND
 GROUP BY ST.IDSTUDENT, ST.NAMESTUDENT
 
 
+--Truy vấn 16: Thêm thông tin lớp học và hiển thị tên lớp học vừa thêm--
+INSERT INTO CLASS(IDCLASS,NAMECLASS) OUTPUT inserted.*
+VALUES(N'125213','SEK18.13')
+
+SELECT * FROM Class
 select * from student
 
 --Câu 6: Thủ tục--
@@ -550,37 +557,7 @@ EXEC dbo.SP_ADD_Class @IDClass = '125211',
 
 select * from student
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 select * from Scores
-
-
-
-
-
-
 
 
 drop trigger NotDelete_Table
@@ -596,7 +573,7 @@ ROLLBACK
 END
 --Thực thi--
 DROP TABLE demo
---Trigger 2: Trigger chỉ cho phép xóa những lớp không có sinh viên nào--
+--Trigger 2: Viết Trigger chỉ cho phép xóa những lớp không có sinh viên nào--
 CREATE TRIGGER Delete_Class_No_Student ON CLASS
 INSTEAD OF delete
 AS
